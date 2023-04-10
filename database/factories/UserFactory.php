@@ -19,9 +19,9 @@ class UserFactory extends Factory
     public function definition(): array
     {
         $roles = [
-            UserRoleEnum::ADMIN->value,
-            UserRoleEnum::EDITOR->value,
-            UserRoleEnum::AUTHOR->value,
+            UserRoleEnum::ADMIN,
+            UserRoleEnum::EDITOR,
+            UserRoleEnum::AUTHOR,
         ];
         return [
             'name' => fake()->name(),

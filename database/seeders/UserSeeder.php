@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
                 'name'  => 'Harris Sontanu',
                 'username'  => 'admin',
                 'email' => 'harris.sontanu@gmail.com',
-                'role'  => UserRoleEnum::ADMIN->value,
+                'role'  => UserRoleEnum::ADMIN,
                 'default'   => 1,
             ]);
 
