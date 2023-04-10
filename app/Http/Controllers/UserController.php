@@ -2,17 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(User::class, 'user');
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return response()->json('This is all users method');
+        return UserResource::collection(
+            User::all()
+        );
     }
 
     /**
