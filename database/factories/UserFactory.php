@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRoleEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -17,7 +18,11 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $roles = ['administrator', 'editor', 'author'];
+        $roles = [
+            UserRoleEnum::ADMIN->value,
+            UserRoleEnum::EDITOR->value,
+            UserRoleEnum::AUTHOR->value,
+        ];
         return [
             'name' => fake()->name(),
             'username' => fake()->nik(),
