@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoginUserRequest;
-use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\Hash;
@@ -13,11 +13,11 @@ class AuthController extends Controller
 {
     use HttpResponses;
 
-    public function login(LoginUserRequest $request)
+    public function login(LoginRequest $request)
     {
         $request->validated();
         
-        $user = User::whereEmail($request->email)->first();
+        $user = User::credential($request->only('email'))->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
@@ -31,15 +31,14 @@ class AuthController extends Controller
         ]);
     }
 
-    public function register(StoreUserRequest $request)
+    public function register(UserRequest $request)
     {
-        $request->validated();
+        $validated = $request->validated();
 
-        $user = User::create([
-            'name'  => $request->name,
-            'email' => $request->email,
-            'password'  => Hash::make($request->password),
-        ]);
+        // Hash password
+        $validated['password'] = Hash::make($request->password);
+
+        $user = User::create($validated);
 
         return $this->success([
             'user'  => $user,

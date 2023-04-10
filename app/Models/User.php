@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Builder;
 
 class User extends Authenticatable
 {
@@ -21,8 +22,20 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
+        'role',
+        'phone',
+        'www',
+        'bio',
+        'facebook',
+        'twitter',
+        'instagram',
+        'tiktok',
+        'youtube',
+        'picture',
+        'last_logged_in_at',
     ];
 
     /**
@@ -44,4 +57,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'role'  => UserRoleEnum::class,
     ];
+
+    public function scopeCredential(Builder $query, array $request): void
+    {
+        $query->whereEmail($request['email'])
+            ->orWhere('username', $request['email']);
+    }
 }
