@@ -16,19 +16,15 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return UserResource::collection(
-            User::all()
-        );
-    }
+        $users = User::search($request->q)
+            ->filter($request)
+            ->sorted($request->order, $request->sort);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return UserResource::collection(
+            $users->paginate($request->show)
+        );
     }
 
     /**
@@ -44,15 +40,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //
+        return new UserResource($user);
     }
 
     /**

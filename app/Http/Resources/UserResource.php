@@ -16,24 +16,25 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {   
         return [
-            'id'    => (string)$this->id,
-            'name'  => $this->name,
+            'id'        => (string)$this->id,
+            'name'      => $this->name,
             'username'  => $this->username,
             'picture'   => $this->picture,
-            'role'  => $this->role,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'bio'   => $this->bio,
-            'www'   => $this->www,
+            'role'      => $this->role,
+            'email'     => $this->email,
+            'emailVerifiedAt'   => $this->email_verified_at,
+            'phone'     => $this->phone,
+            'bio'       => $this->bio,
+            'www'       => $this->www,
             'facebook'  => $this->facebook,
             'twitter'   => $this->twitter,
             'tiktok'    => $this->tiktok,
             'instagram' => $this->instagram,
             'youtube'   => $this->youtube,
-            'deleted_at'=> $this->deleted_at,
-            'remember_token'=> $this->when(Gate::allows('isAdmin'), $this->remember_token),
-            'created_at'    => $this->created_at,
-            'updated_at'    => $this->updated_at,
+            'deletedAt' => $this->when(Gate::allows('isAdmin'), $this->deleted_at),
+            'rememberToken'=> $this->when(Gate::allows('isAdmin'), $this->remember_token),
+            'createdAt' => $this->when(Gate::allows('isAdmin'), $this->created_at),
+            'updatedAt' => $this->when(Gate::allows('isAdmin'), $this->updated_at),
         ];
     }
 }

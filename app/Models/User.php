@@ -59,9 +59,52 @@ class User extends Authenticatable
         'role'  => UserRoleEnum::class,
     ];
 
+    public function status(): string
+    {
+        $status = 'active';
+        if (is_null($this->email_verified_at)) $status = 'pending';
+        if (isset($this->deleted_at)) $status = 'trash';
+
+        return $status;
+    }
+
     public function scopeCredential(Builder $query, array $request): void
     {
         $query->whereEmail($request['email'])
             ->orWhere('username', $request['email']);
+    }
+   
+    public function scopeOfStatus(Builder $query, ?string $status): void
+    {   
+        match ($status) {
+            'pending'   => $query->whereNull('deleted_at')->whereNull('email_verified_at'),
+            'active'    => $query->whereNull('deleted_at')->whereNotNull('email_verified_at'),
+            'trash'     => $query->onlyTrashed(),
+            default     => $query,
+        };
+    }
+
+    public function scopeSearch(Builder $query, ?string $q): void
+    {
+        if (isset($q)) {
+            $query->where('name', 'like', $q . '%')
+                ->orWhere('email', 'like', $q . '%');
+        }
+    }
+
+    public function scopeFilter(Builder $query, ?object $request): void
+    {   
+        $query->ofStatus($request->status);
+
+        if ($role = $request->enum('role', UserRoleEnum::class)) {
+            $query->where('role', $role->value);
+        }
+    }
+
+    public function scopeSorted(Builder $query, ?string $order, ?string $sort): void
+    {
+        isset($order) 
+            ? $query->orderBy($order, $sort) 
+            : $query->latest();
     }
 }
