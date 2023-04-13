@@ -31,10 +31,10 @@ class UserResource extends JsonResource
             'tiktok'    => $this->tiktok,
             'instagram' => $this->instagram,
             'youtube'   => $this->youtube,
-            'deletedAt' => $this->when(Gate::allows('isAdmin'), $this->deleted_at),
-            'rememberToken'=> $this->when(Gate::allows('isAdmin'), $this->remember_token),
-            'createdAt' => $this->when(Gate::allows('isAdmin'), $this->created_at),
-            'updatedAt' => $this->when(Gate::allows('isAdmin'), $this->updated_at),
+            'deletedAt' => $this->deleted_at,
+            'rememberToken' => $this->remember_token,
+            'createdAt' => $this->created_at,
+            'updatedAt' => $this->updated_at,
         ];
     }
 }

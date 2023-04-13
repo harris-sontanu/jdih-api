@@ -80,7 +80,7 @@ class User extends Authenticatable
             'pending'   => $query->whereNull('deleted_at')->whereNull('email_verified_at'),
             'active'    => $query->whereNull('deleted_at')->whereNotNull('email_verified_at'),
             'trash'     => $query->onlyTrashed(),
-            default     => $query,
+            default     => $query->whereNull('created_at'),
         };
     }
 
@@ -93,11 +93,17 @@ class User extends Authenticatable
     }
 
     public function scopeFilter(Builder $query, ?object $request): void
-    {   
-        $query->ofStatus($request->status);
+    {           
+        foreach ($request->all() as $key => $value) 
+        {
+            if ($key == 'status') $query->ofStatus($value);
 
-        if ($role = $request->enum('role', UserRoleEnum::class)) {
-            $query->where('role', $role->value);
+            if ($key == 'role') {
+                $role = $request->enum('role', UserRoleEnum::class);
+                isset($role->value) ? $query->where('role', $role->value) : $query->whereNull('created_at');
+            }
+
+            $query->where($key, 'like', '%' . $value . '%');
         }
     }
 
